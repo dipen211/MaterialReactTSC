@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 // import PropTypes from 'prop-types';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -32,19 +33,45 @@ function CustomTable({ ...props }: any) {
           </TableHead>
         ) : null}
         <TableBody>
-          {tableData.map((prop: any, key: any) => {
-            return (
-              <TableRow key={key}>
-                {prop.map((p: any, k: any) => {
-                  return (
-                    <TableCell className={classes.tableCell} key={k}>
-                      {p}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-            );
-          })}
+          {tableData.map((employee: any) => (
+            <TableRow key={employee.id}>
+              <TableCell className={classes.tableCell}>
+                <Link
+                  to={`/Create/${employee.id}`}
+                  className="btn btn-sm btn-outline-secondary"
+                >
+                  ADD
+                </Link>
+              </TableCell>
+              <TableCell className={classes.tableCell}>
+                {employee.id}
+              </TableCell>
+              <TableCell className={classes.tableCell}>
+                {employee.first_name}
+              </TableCell>
+              <TableCell className={classes.tableCell}>
+                {employee.last_name}
+              </TableCell>
+              <TableCell className={classes.tableCell}>
+                {employee.email}
+              </TableCell>
+              <TableCell className={classes.tableCell}>
+                {employee.password}
+              </TableCell>
+              <TableCell className={classes.tableCell}>
+                <Link
+                  to={`/Edit/${employee.id}`}
+                  className="btn btn-sm btn-outline-secondary"
+                >
+                  Edit Employee
+                </Link>
+                <button
+                  className="btn btn-sm btn-outline-secondary"
+                  onClick={() => { if (window.confirm('Delete the item?')) { props.deleteEmployee(employee.id) } }}
+                >Delete Employee</button>
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </div>
@@ -54,20 +81,5 @@ function CustomTable({ ...props }: any) {
 CustomTable.defaultProps = {
   tableHeaderColor: 'gray'
 };
-
-// CustomTable.propTypes = {
-//   classes: PropTypes.object.isRequired,
-//   tableHeaderColor: PropTypes.oneOf([
-//     'warning',
-//     'primary',
-//     'danger',
-//     'success',
-//     'info',
-//     'rose',
-//     'gray'
-//   ]),
-//   tableHead: PropTypes.arrayOf(PropTypes.string),
-//   tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string))
-// };
 
 export default withStyles(tableStyle)(CustomTable);

@@ -506,3 +506,24 @@ footer ul li a:hover {
   right: auto;
   left: 80px;
 }
+
+table {
+  margin-top: 50px;
+}
+/* MODEL */
+.popupmodal {
+  font-size: 15px;
+  background-color: white;
+  border: 3px solid gray;
+}
+.popupmodal > .header {
+  width: 100%;
+  border-bottom: 1px solid gray;
+  font-size: 18px;
+  text-align: center;
+  padding: 5px;
+}
+.popupmodal > .content {
+  width: 100%;
+  padding: 10px 5px;
+}

@@ -5,33 +5,45 @@
   "private": false,
   "main": "dist/index.js",
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.32",
+    "@fortawesome/free-solid-svg-icons": "^5.15.1",
+    "@fortawesome/react-fontawesome": "^0.1.13",
     "@material-ui/core": "3.9.2",
     "@material-ui/icons": "3.0.2",
     "@types/classnames": "^2.2.8",
     "@types/react": "^16.8.20",
     "@types/react-dom": "^16.8.4",
     "@types/react-router-dom": "^4.3.4",
+    "@types/yup": "^0.29.9",
+    "axios": "^0.21.0",
+    "bootstrap": "^4.5.3",
     "chartist": "0.10.1",
     "classnames": "2.2.6",
+    "formik": "^2.2.5",
     "history": "4.7.2",
     "perfect-scrollbar": "1.4.0",
     "prettier": "1.16.4",
     "react": "^16.8.1",
+    "react-bootstrap": "^1.4.0",
     "react-chartist": "0.13.3",
     "react-dom": "16.8.1",
     "react-google-maps": "9.4.5",
     "react-router-dom": "4.3.1",
     "react-scripts": "2.1.5",
+    "react-select": "^3.1.1",
     "react-swipeable-views": "0.13.1",
+    "reactjs-popup": "^2.0.4",
     "tslint": "^5.17.0",
     "tslint-react": "^4.0.0",
-    "typescript": "^3.5.2"
+    "typescript": "^3.5.2",
+    "yup": "^0.31.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
+    "server": "json-server --watch server/db.json",
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
     "lint:check": "eslint . --ext=js,jsx;  exit 0",
     "lint:fix": "eslint . --ext=js,jsx --fix;  exit 0",
@@ -63,5 +75,7 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/react-select": "^3.0.26"
+  }
 }
