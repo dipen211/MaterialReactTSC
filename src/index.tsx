@@ -4,6 +4,7 @@ import { createBrowserHistory } from 'history';
 import { Router, Route, Switch, Redirect } from 'react-router-dom';
 import Create from './views/TableList/Employee/Create';
 import Edit from './views/TableList/Employee/Edit';
+import Login from './views/Login/Login';
 import "../node_modules/bootstrap/dist/css/bootstrap.css";
 // core components
 import Admin from './layouts/Admin';
@@ -19,8 +20,9 @@ ReactDOM.render(
     <Switch>
       <Route path="/admin" component={Admin} />
       <Route path="/rtl" component={RTL} />
-      <Route path={'/create/:id'} exact component={Create} />
+      <Route path={'/create'} exact component={Create} />
       <Route path={'/edit/:id'} exact component={Edit} />
+      <Route path="/login" component={Login} />
       <Redirect from="/" to="/admin/dashboard" />
     </Switch>
   </Router>,

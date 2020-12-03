@@ -36,14 +36,6 @@ function CustomTable({ ...props }: any) {
           {tableData.map((employee: any) => (
             <TableRow key={employee.id}>
               <TableCell className={classes.tableCell}>
-                <Link
-                  to={`/Create/${employee.id}`}
-                  className="btn btn-sm btn-outline-secondary"
-                >
-                  ADD
-                </Link>
-              </TableCell>
-              <TableCell className={classes.tableCell}>
                 {employee.id}
               </TableCell>
               <TableCell className={classes.tableCell}>

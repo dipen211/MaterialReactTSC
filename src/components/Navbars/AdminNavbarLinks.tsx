@@ -20,6 +20,8 @@ import Button from '../CustomButtons/Button';
 
 import headerLinksStyle from '../../assets/jss/material-dashboard-react/components/headerLinksStyle';
 
+import { Link } from "react-router-dom";
+
 interface Props {
   classes: any;
 }
@@ -29,24 +31,38 @@ class HeaderLinks extends React.Component<Props, {}> {
   anchorEl: any;
 
   state = {
-    open: false
+    NotificationOpen: false,
+    UserOpen: false
   };
 
-  handleToggle = () => {
-    this.setState({ open: !this.state.open });
+  NotificationToggle = () => {
+    this.setState({ NotificationOpen: !this.state.NotificationOpen });
   }
 
-  handleClose = (event: any) => {
+  NotificationClose = (event: any) => {
     if (this.anchorEl.contains(event.target)) {
       return;
     }
 
-    this.setState({ open: false });
+    this.setState({ NotificationOpen: false });
+  }
+
+  UserToggle = () => {
+    this.setState({ UserOpen: !this.state.UserOpen });
+  }
+
+  UserClose = (event: any) => {
+    if (this.anchorEl.contains(event.target)) {
+      return;
+    }
+
+    this.setState({ UserOpen: false });
   }
 
   render() {
     const { classes } = this.props;
-    const { open } = this.state;
+    const { NotificationOpen } = this.state;
+    const { UserOpen } = this.state;
     return (
       <div>
         <div className={classes.searchWrapper}>
@@ -85,27 +101,27 @@ class HeaderLinks extends React.Component<Props, {}> {
             color={window.innerWidth > 959 ? 'transparent' : 'white'}
             justIcon={window.innerWidth > 959}
             simple={!(window.innerWidth > 959)}
-            aria-owns={open ? 'menu-list-grow' : null}
+            aria-owns={NotificationOpen ? 'menu-list-grow' : null}
             aria-haspopup="true"
-            onClick={this.handleToggle}
+            onClick={this.NotificationToggle}
             className={classes.buttonLink}
           >
             <Notifications className={classes.icons} />
             <span className={classes.notifications}>5</span>
             <Hidden mdUp={true} implementation="css">
-              <p  className={classes.linkText}> 
-              {/* onClick={this.handleClick} */}
+              <p className={classes.linkText}>
+                {/* onClick={this.handleClick} */}
                 Notification
               </p>
             </Hidden>
           </Button>
           <Poppers
-            open={open}
+            open={NotificationOpen}
             anchorEl={this.anchorEl}
             transition={true}
             disablePortal={true}
             className={
-              classNames({ [classes.popperClose]: !open }) +
+              classNames({ [classes.popperClose]: !NotificationOpen }) +
               ' ' +
               classes.pooperNav
             }
@@ -120,34 +136,34 @@ class HeaderLinks extends React.Component<Props, {}> {
                 }}
               >
                 <Paper>
-                  <ClickAwayListener onClickAway={this.handleClose}>
+                  <ClickAwayListener onClickAway={this.NotificationClose}>
                     <MenuList role="menu">
                       <MenuItem
-                        onClick={this.handleClose}
+                        onClick={this.NotificationClose}
                         className={classes.dropdownItem}
                       >
                         Mike John responded to your email
                       </MenuItem>
                       <MenuItem
-                        onClick={this.handleClose}
+                        onClick={this.NotificationClose}
                         className={classes.dropdownItem}
                       >
                         You have 5 new tasks
                       </MenuItem>
                       <MenuItem
-                        onClick={this.handleClose}
+                        onClick={this.NotificationClose}
                         className={classes.dropdownItem}
                       >
                         You're now friend with Andrew
                       </MenuItem>
                       <MenuItem
-                        onClick={this.handleClose}
+                        onClick={this.NotificationClose}
                         className={classes.dropdownItem}
                       >
                         Another Notification
                       </MenuItem>
                       <MenuItem
-                        onClick={this.handleClose}
+                        onClick={this.NotificationClose}
                         className={classes.dropdownItem}
                       >
                         Another One
@@ -159,18 +175,76 @@ class HeaderLinks extends React.Component<Props, {}> {
             )}
           </Poppers>
         </div>
-        <Button
-          color={window.innerWidth > 959 ? 'transparent' : 'white'}
-          justIcon={window.innerWidth > 959}
-          simple={!(window.innerWidth > 959)}
-          aria-label="Person"
-          className={classes.buttonLink}
-        >
-          <Person className={classes.icons} />
-          <Hidden mdUp={true} implementation="css">
-            <p className={classes.linkText}>Profile</p>
-          </Hidden>
-        </Button>
+
+
+        <div className={classes.manager}>
+          <Button
+            buttonRef={(node: any) => {
+              this.anchorEl = node;
+            }}
+            color={window.innerWidth > 959 ? 'transparent' : 'white'}
+            justIcon={window.innerWidth > 959}
+            simple={!(window.innerWidth > 959)}
+            aria-owns={UserOpen ? 'menu-list-grow' : null}
+            aria-haspopup="true"
+            aria-label="Person"
+            onClick={this.UserToggle}
+            className={classes.buttonLink}
+          >
+            <Person className={classes.icons} />
+            <Hidden mdUp={true} implementation="css">
+              <p className={classes.linkText}>Profile</p>
+            </Hidden>
+          </Button>
+          <Poppers
+            open={UserOpen}
+            anchorEl={this.anchorEl}
+            transition={true}
+            disablePortal={true}
+            className={
+              classNames({ [classes.popperClose]: !UserOpen }) +
+              ' ' +
+              classes.pooperNav
+            }
+          >
+            {({ TransitionProps, placement }) => (
+              <Grow
+                {...TransitionProps}
+                // id="menu-list-grow"
+                style={{
+                  transformOrigin:
+                    placement === 'bottom' ? 'center top' : 'center bottom'
+                }}
+              >
+                <Paper>
+                  <ClickAwayListener onClickAway={this.UserClose}>
+                    <MenuList role="menu">
+                      <MenuItem
+                        onClick={this.UserClose}
+                        className={classes.dropdownItem}
+                      >
+                        <h2>Patel Dipen</h2>
+                      </MenuItem>
+                      <MenuItem
+                        onClick={this.UserClose}
+                        className={classes.dropdownItem}
+                      >
+                        <Link
+                          to={`/Login`}
+                          className={classes.profileMenuLink}
+                          color="primary"
+                        >
+                          Sign-Out
+                        </Link>
+                        
+                      </MenuItem>
+                    </MenuList>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Poppers>
+        </div>
       </div>
     );
   }
