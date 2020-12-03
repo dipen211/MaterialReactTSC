@@ -21,12 +21,22 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
-import {Icons} from 'material-table';
-import axios from 'axios'
+import { Icons } from 'material-table';
+import axios from 'axios';
 import Alert from '@material-ui/lab/Alert';
 import { forwardRef } from 'react';
 import { createStyles } from '@material-ui/core';
-
+import { Popups } from '../../components/Popup/popup';
+import Info from '@material-ui/icons/Info';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Paper, { PaperProps } from '@material-ui/core/Paper';
+import Draggable from 'react-draggable';
+import Select from 'react-select';
 const tableIcons: Icons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
   Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -46,39 +56,33 @@ const tableIcons: Icons = {
   ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
-
-const columns = [
-  { field: 'Key', title: 'Key', hidden: true },
-  { field: 'FirstName', title: 'First name' },
-  { field: 'LastName', title: 'Last name' },
-  { field: 'UserName', title: 'User name' },
-  { field: 'Email', title: 'Email' },
-  { field: 'Password', title: 'Password' },
-  { field: 'TeamID', title: 'TeamID' }
-];
-
-
+function PaperComponent(props: PaperProps) {
+  return (
+    <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
+      <Paper {...props} />
+    </Draggable>
+  );
+}
 function TableList(props: any) {
   // const { classes } = props;
   const [data, setData] = useState([] as any);
   const [iserror, setIserror] = useState(false)
   const [errorMessages, setErrorMessages] = useState([] as any)
-
+  const [selectValue, setselectValue] = useState([] as any);
   useEffect(() => {
-    axios.get('https://employee-management-8ebb3.firebaseio.com/TeamMembers.json')
+    axios.get('http://localhost:5000/employees')
       .then(res => {
         const employees = Object.keys(res.data)
         // console.log(employees);
         const testData = employees.map(key => {
           const emp = res.data[key]
           return {
-            Key: key,
-            FirstName: emp.FirstName,
-            UserName: emp.UserName,
-            Email: emp.Email,
-            Password: emp.Password,
-            LastName: emp.LastName,
-            TeamID: emp.TeamID,
+            id: emp.id,
+            first_name: emp.first_name,
+            last_name: emp.last_name,
+            email: emp.email,
+            password: emp.password,
+            team_id: emp.team_id
           }
         });
         setData(testData);
@@ -89,7 +93,8 @@ function TableList(props: any) {
     //validation
     let errorList: string | any[] | ((prevState: never[]) => never[]) = []
     if (errorList.length < 1) {
-      axios.patch("https://employee-management-8ebb3.firebaseio.com/TeamMembers/" + newData.Key + ".json", newData)
+      console.log(oldData.id);
+      axios.patch("http://localhost:5000/employees/" + oldData.id, newData)
         .then(res => {
           const dataUpdate = [...data];
           const index = oldData.tableData.id;
@@ -114,23 +119,20 @@ function TableList(props: any) {
   const handleRowAdd = (newData = [] as any, resolve: { (value?: any): void; (): void; }) => {
     //validation
     let errorList = []
-    if (newData.FirstName === undefined) {
+    if (newData.first_name === undefined) {
       errorList.push("Please enter first name")
     }
-    if (newData.LastName === undefined) {
+    if (newData.last_name === undefined) {
       errorList.push("Please enter last   name")
     }
-    if (newData.Email === undefined) {
+    if (newData.email === undefined) {
       errorList.push("Please enter a valid email")
     }
-    if (newData.UserName === undefined) {
-      errorList.push("Please enter a valid username")
-    }
-    if (newData.Password === undefined) {
+    if (newData.password === undefined) {
       errorList.push("Please enter a valid password")
     }
     if (errorList.length < 1) { //no error
-      axios.post("https://employee-management-8ebb3.firebaseio.com/TeamMembers.json", newData)
+      axios.post("http://localhost:5000/employees/", newData)
         .then(res => {
           let dataToAdd = [...data];
           dataToAdd.push(newData);
@@ -138,8 +140,10 @@ function TableList(props: any) {
           resolve()
           setErrorMessages([])
           setIserror(false)
+          console.log("ADD");
         })
         .catch(error => {
+          console.log("ADD123");
           setErrorMessages(["Cannot add data. Server error!"])
           setIserror(true)
           resolve()
@@ -152,7 +156,7 @@ function TableList(props: any) {
   }
 
   const handleRowDelete = (oldData: any, resolve: any) => {
-    axios.delete("https://employee-management-8ebb3.firebaseio.com/TeamMembers/" + oldData.Key + ".json")
+    axios.delete("http://localhost:5000/employees/" + oldData.id)
       .then(res => {
         const dataDelete = [...data];
         const index = oldData.tableData.id;
@@ -166,56 +170,156 @@ function TableList(props: any) {
         resolve()
       })
   }
+  const handleChange = (selectValue: any) => {
+    setselectValue({ selectValue });
+    console.log(selectValue.length);
+  };
+  const options = data.map((data: any) => (data.id));
+  const alertMyRow = (selectedRow: any) => (
+    <Popups
+      first_name={selectedRow.first_name}
+      data={data}
+      selectValue={selectValue}
+      id={selectedRow.id}
+      handleChange={handleChange}
+      options={options}
+    />
+  );
+  const [open, setOpen] = React.useState(false);
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
-    <Grid container spacing={1}>
-      <Grid item xs={3}></Grid>
-      <Grid item xs={6}>
-        <div>
-          {iserror &&
-            <Alert severity="error">
-              {errorMessages.map((msg: any, i: any) => {
-                return <div key={i}>{msg}</div>
-              })}
-            </Alert>
-          }
-        </div>
-        <Card>
-          <CardHeader color="primary">
-            <h4>Employee Management</h4>
-          </CardHeader>
-          <CardBody>
-            <MaterialTable
-              data={data}
-              columns={columns}
-              icons={tableIcons}
-              editable={{
-                onRowUpdate: (newData, oldData) =>
-                  new Promise((resolve) => {
-                    // this.UpdateData(newData);
-                    console.log(newData);
-                    console.log(oldData);
-                    console.log(resolve);
-                    handleRowUpdate(newData, oldData, resolve);
-                  }),
-                onRowAdd: (newData) =>
-                  new Promise((resolve) => {
-                    console.log(newData);
-                    console.log(resolve);
-                    handleRowAdd(newData, resolve)
-                  }),
-                onRowDelete: (oldData) =>
-                  new Promise((resolve) => {
-                    console.log(oldData);
-                    console.log(resolve);
-                    handleRowDelete(oldData, resolve)
-                  }),
-              }} />
-          </CardBody>
-        </Card>
+    <>
+      <Grid container spacing={1}>
+        <Grid item xs={12}>
+          <div>
+            {iserror &&
+              <Alert severity="error">
+                {errorMessages.map((msg: any, i: any) => {
+                  return <div key={i}>{msg}</div>
+                })}
+              </Alert>
+            }
+          </div>
+          <Card>
+            <CardHeader color="primary">
+              <h4>Employee Management</h4>
+            </CardHeader>
+            <CardBody>
+              <MaterialTable
+                data={data}
+                columns={[
+                  { field: 'id', title: 'ID' },
+                  { field: 'first_name', title: 'First name' },
+                  { field: 'last_name', title: 'Last name' },
+                  { field: 'email', title: 'Email' },
+                  { field: 'password', title: 'Password' },
+                  { field: 'team_id', title: 'team_id' },
+                  {
+                    title: "Custom Add",
+                    field: "internal_action",
+                    render: (rowData: any) => <Popups
+                      first_name={data.first_name}
+                      id={data.id}
+                      data={data}
+                      selectValue={selectValue}
+                      handleChange={handleChange}
+                      options={options}
+                    />
+                  }
+                ]}
+                icons={tableIcons}
+                onRowClick={handleClickOpen}
+                editable={{
+                  onRowUpdate: (newData, oldData) =>
+                    new Promise((resolve) => {
+                      // this.UpdateData(newData);
+                      console.log(newData);
+                      console.log(oldData);
+                      console.log(resolve);
+                      handleRowUpdate(newData, oldData, resolve);
+                    }),
+                  onRowAdd: (newData) =>
+                    new Promise((resolve) => {
+                      console.log(newData);
+                      console.log(resolve);
+                      handleRowAdd(newData, resolve)
+                    }),
+                  onRowDelete: (oldData) =>
+                    new Promise((resolve) => {
+                      console.log(oldData);
+                      console.log(resolve);
+                      handleRowDelete(oldData, resolve)
+                    }),
+                }} />
+            </CardBody>
+          </Card>
+        </Grid>
       </Grid>
-      <Grid item xs={3}></Grid>
-    </Grid>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        PaperComponent={PaperComponent}
+        aria-labelledby="draggable-dialog-title"
+      >
+        <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+          Team
+          <Select
+            value={selectValue}
+            onChange={handleChange}
+            options={options}
+          />
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            <table className="table table-bordered">
+              <thead className="thead-light">
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">First_Name</th>
+                  <th scope="col">Last_Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Password</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((emp: any) => {
+                  return selectValue.length === 0 ? (
+                    <tr key={emp.id}>
+                      <td>{emp.id}</td>
+                      <td>{emp.first_name}</td>
+                      <td>{emp.last_name}</td>
+                      <td>{emp.email}</td>
+                      <td>{emp.password}</td>
+                    </tr>
+                  ) : (selectValue === emp.team_id ? (
+                    <tr key={emp.id}>
+                      <td>{emp.id}</td>
+                      <td>{emp.first_name}</td>
+                      <td>{emp.last_name}</td>
+                      <td>{emp.email}</td>
+                      <td>{emp.password}</td>
+                    </tr>
+                  ) : null)
+
+                })}
+              </tbody>
+            </table>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={handleClose} color="primary">
+            Cancel
+      </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
 

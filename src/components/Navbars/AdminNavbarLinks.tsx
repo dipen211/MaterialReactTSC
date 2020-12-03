@@ -234,7 +234,7 @@ class HeaderLinks extends React.Component<Props, {}> {
                           className={classes.profileMenuLink}
                           color="primary"
                         >
-                          Sign-Out
+                          <button>Sign-Out</button>
                         </Link>
                         
                       </MenuItem>

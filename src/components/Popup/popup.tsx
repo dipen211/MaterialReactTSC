@@ -15,8 +15,7 @@ export const Popups = (Props: any) => {
         >
             <div className="popupmodal">
                 <div className="header">
-                    {" "}
-                    {Props.first_name}'s Team{" "}
+                    {" "}Team{" "}
                     <DropDown
                         id={Props.id}
                         selectValue={Props.selectValue}
@@ -36,7 +35,7 @@ export const Popups = (Props: any) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {Props.employees.map((emp: any) => {
+                            {Props.data.map((emp: any) => {
                                 return Props.selectValue.length === 0 ? (
                                     Props.id === emp.team_id ? (
                                         <tr key={emp.id}>

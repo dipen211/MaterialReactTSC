@@ -152,7 +152,6 @@ class Dashboard extends React.Component<Props, State> {
                   className="ct-chart"
                   data={dailySalesChart.data}
                   type="Line"
-                  options={dailySalesChart.options}
                   // listener={dailySalesChart.animation}
                 />
               </CardHeader>
@@ -179,7 +178,6 @@ class Dashboard extends React.Component<Props, State> {
                   className="ct-chart"
                   data={emailsSubscriptionChart.data}
                   type="Bar"
-                  options={emailsSubscriptionChart.options}
                   // responsiveOptions={emailsSubscriptionChart.responsiveOptions}
                   // listener={emailsSubscriptionChart.animation}
                 />
@@ -204,7 +202,6 @@ class Dashboard extends React.Component<Props, State> {
                   className="ct-chart"
                   data={completedTasksChart.data}
                   type="Line"
-                  options={completedTasksChart.options}
                   // listener={completedTasksChart.animation}
                 />
               </CardHeader>

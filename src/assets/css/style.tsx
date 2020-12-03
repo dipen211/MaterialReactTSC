@@ -1,6 +1,6 @@
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from '@material-ui/core/styles';
 
-export default makeStyles(() => ({
+export default makeStyles((theme) => ({
   container: {
     height: "100vh",
     width: "100vw",
@@ -12,20 +12,31 @@ export default makeStyles(() => ({
     left: 0,
   },
   logotypeContainer: {
+    backgroundColor: theme.palette.primary.main,
     width: "60%",
     height: "100%",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    [theme.breakpoints.down("md")]: {
+      width: "50%",
+    },
+    [theme.breakpoints.down("md")]: {
+      display: "none",
+    },
   },
   logotypeImage: {
     width: 165,
+    marginBottom: theme.spacing(4),
   },
   logotypeText: {
     color: "white",
     fontWeight: 500,
     fontSize: 84,
+    [theme.breakpoints.down("md")]: {
+      fontSize: 48,
+    },
   },
   formContainer: {
     width: "40%",
@@ -34,6 +45,9 @@ export default makeStyles(() => ({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    [theme.breakpoints.down("md")]: {
+      width: "50%",
+    },
   },
   form: {
     width: 320,
@@ -45,12 +59,15 @@ export default makeStyles(() => ({
   greeting: {
     fontWeight: 500,
     textAlign: "center",
+    marginTop: theme.spacing(4),
   },
   subGreeting: {
     fontWeight: 500,
     textAlign: "center",
+    marginTop: theme.spacing(2),
   },
   googleButton: {
+    marginTop: theme.spacing(6),
     backgroundColor: "white",
     width: "100%",
     textTransform: "none",
@@ -60,8 +77,10 @@ export default makeStyles(() => ({
   },
   googleIcon: {
     width: 30,
+    marginRight: theme.spacing(2),
   },
   creatingButtonContainer: {
+    marginTop: theme.spacing(2.5),
     height: 46,
     display: "flex",
     justifyContent: "center",
@@ -72,20 +91,40 @@ export default makeStyles(() => ({
     textTransform: "none",
   },
   formDividerContainer: {
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(4),
     display: "flex",
     alignItems: "center",
   },
   formDividerWord: {
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
   },
   formDivider: {
     flexGrow: 1,
     height: 1,
+    backgroundColor: theme.palette.text.hint + "40",
   },
   errorMessage: {
     textAlign: "center",
   },
+  textFieldUnderline: {
+    "&:before": {
+      borderBottomColor: theme.palette.primary.light,
+    },
+    "&:after": {
+      borderBottomColor: theme.palette.primary.main,
+    },
+    "&:hover:before": {
+      borderBottomColor: `${theme.palette.primary.light} !important`,
+    },
+  },
+  textField: {
+    borderBottomColor: theme.palette.background.default,
+  },
   formButtons: {
     width: "100%",
+    marginTop: theme.spacing(4),
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
@@ -95,8 +134,14 @@ export default makeStyles(() => ({
     fontWeight: 400,
   },
   loginLoader: {
+    marginLeft: theme.spacing(4),
   },
   copyright: {
+    marginTop: theme.spacing(4),
     whiteSpace: "nowrap",
+    [theme.breakpoints.up("md")]: {
+      position: "absolute",
+      bottom: theme.spacing(2),
+    },
   },
 }));
