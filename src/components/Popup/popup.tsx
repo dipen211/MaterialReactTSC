@@ -1,13 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
+import MultiSelect from "react-multi-select-component";
 import Popup from "reactjs-popup";
 import { DropDown } from '../Select/select';
+import Info from '@material-ui/icons/Info';
 export const Popups = (Props: any) => {
+    const [selected, setSelected] = useState([] as any);
+    const options = [...Props.options]
+    console.log(selected)
+    console.log(selected.length)
     return (
         <Popup
             trigger={
                 <button className="btn btn-sm btn-outline-secondary">
                     {" "}
-                    Team Details{" "}
+                    <Info />{" "}
                 </button>
             }
             modal
@@ -16,11 +22,17 @@ export const Popups = (Props: any) => {
             <div className="popupmodal">
                 <div className="header">
                     {" "}Team{" "}
-                    <DropDown
+                    {/* <DropDown
                         id={Props.id}
                         selectValue={Props.selectValue}
                         handleChange={Props.handleChange}
-                        options={Props.options}
+                        options={Props.data}
+                    /> */}
+                    <MultiSelect
+                        options={options}
+                        value={selected}
+                        onChange={setSelected}
+                        labelledBy={"Select"}
                     />
                 </div>
                 <div className="content">
@@ -36,7 +48,7 @@ export const Popups = (Props: any) => {
                         </thead>
                         <tbody>
                             {Props.data.map((emp: any) => {
-                                return Props.selectValue.length === 0 ? (
+                                return selected.length === 0 ? (
                                     Props.id === emp.team_id ? (
                                         <tr key={emp.id}>
                                             <td>{emp.id}</td>
@@ -46,7 +58,7 @@ export const Popups = (Props: any) => {
                                             <td>{emp.password}</td>
                                         </tr>
                                     ) : null) : (
-                                        Props.selectValue === emp.team_id ? (
+                                        selected == emp.team_id ? (
                                             <tr key={emp.id}>
                                                 <td>{emp.id}</td>
                                                 <td>{emp.first_name}</td>

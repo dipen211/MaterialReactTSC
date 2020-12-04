@@ -27,16 +27,6 @@ import Alert from '@material-ui/lab/Alert';
 import { forwardRef } from 'react';
 import { createStyles } from '@material-ui/core';
 import { Popups } from '../../components/Popup/popup';
-import Info from '@material-ui/icons/Info';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Paper, { PaperProps } from '@material-ui/core/Paper';
-import Draggable from 'react-draggable';
-import Select from 'react-select';
 const tableIcons: Icons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
   Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -56,13 +46,6 @@ const tableIcons: Icons = {
   ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
-function PaperComponent(props: PaperProps) {
-  return (
-    <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
-      <Paper {...props} />
-    </Draggable>
-  );
-}
 function TableList(props: any) {
   // const { classes } = props;
   const [data, setData] = useState([] as any);
@@ -172,28 +155,11 @@ function TableList(props: any) {
   }
   const handleChange = (selectValue: any) => {
     setselectValue({ selectValue });
-    console.log(selectValue.length);
   };
   const options = data.map((data: any) => (data.id));
-  const alertMyRow = (selectedRow: any) => (
-    <Popups
-      first_name={selectedRow.first_name}
-      data={data}
-      selectValue={selectValue}
-      id={selectedRow.id}
-      handleChange={handleChange}
-      options={options}
-    />
-  );
+
   const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
   return (
     <>
       <Grid container spacing={1}>
@@ -222,11 +188,11 @@ function TableList(props: any) {
                   { field: 'password', title: 'Password' },
                   { field: 'team_id', title: 'team_id' },
                   {
-                    title: "Custom Add",
+                    title: "Team_Details",
                     field: "internal_action",
                     render: (rowData: any) => <Popups
-                      first_name={data.first_name}
-                      id={data.id}
+                      first_name={rowData.first_name}
+                      id={rowData.id}
                       data={data}
                       selectValue={selectValue}
                       handleChange={handleChange}
@@ -235,7 +201,6 @@ function TableList(props: any) {
                   }
                 ]}
                 icons={tableIcons}
-                onRowClick={handleClickOpen}
                 editable={{
                   onRowUpdate: (newData, oldData) =>
                     new Promise((resolve) => {
@@ -258,67 +223,11 @@ function TableList(props: any) {
                       handleRowDelete(oldData, resolve)
                     }),
                 }} />
+
             </CardBody>
           </Card>
         </Grid>
       </Grid>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        PaperComponent={PaperComponent}
-        aria-labelledby="draggable-dialog-title"
-      >
-        <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-          Team
-          <Select
-            value={selectValue}
-            onChange={handleChange}
-            options={options}
-          />
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            <table className="table table-bordered">
-              <thead className="thead-light">
-                <tr>
-                  <th scope="col">ID</th>
-                  <th scope="col">First_Name</th>
-                  <th scope="col">Last_Name</th>
-                  <th scope="col">Email</th>
-                  <th scope="col">Password</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((emp: any) => {
-                  return selectValue.length === 0 ? (
-                    <tr key={emp.id}>
-                      <td>{emp.id}</td>
-                      <td>{emp.first_name}</td>
-                      <td>{emp.last_name}</td>
-                      <td>{emp.email}</td>
-                      <td>{emp.password}</td>
-                    </tr>
-                  ) : (selectValue === emp.team_id ? (
-                    <tr key={emp.id}>
-                      <td>{emp.id}</td>
-                      <td>{emp.first_name}</td>
-                      <td>{emp.last_name}</td>
-                      <td>{emp.email}</td>
-                      <td>{emp.password}</td>
-                    </tr>
-                  ) : null)
-
-                })}
-              </tbody>
-            </table>
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={handleClose} color="primary">
-            Cancel
-      </Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 }
