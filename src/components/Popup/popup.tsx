@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import MultiSelect from "react-multi-select-component";
-import Popup from "reactjs-popup";
-import { DropDown } from '../Select/select';
+import Select from 'react-select';
+import Popup from "reactjs-popup"
 import Info from '@material-ui/icons/Info';
 export const Popups = (Props: any) => {
     const [selected, setSelected] = useState([] as any);
@@ -28,7 +27,7 @@ export const Popups = (Props: any) => {
                         handleChange={Props.handleChange}
                         options={Props.data}
                     /> */}
-                    <MultiSelect
+                    <Select
                         options={options}
                         value={selected}
                         onChange={setSelected}
