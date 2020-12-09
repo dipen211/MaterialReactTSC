@@ -2,11 +2,15 @@
   "employees": [
     {
       "id": "1",
-      "team_id": "2",
+      "team_id": [
+        "2",
+        "3",
+        "4"
+      ],
       "first_name": "Divya",
       "last_name": "Patel",
-      "email": "patel61@gmail.com",
-      "password": "scvbhjkloijuhg"
+      "email": "pateldipen161@gmail.com",
+      "password": "1234567890"
     },
     {
       "id": "2",

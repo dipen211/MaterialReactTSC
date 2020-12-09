@@ -27,6 +27,8 @@ import Alert from '@material-ui/lab/Alert';
 import { forwardRef } from 'react';
 import { createStyles } from '@material-ui/core';
 import { Popups } from '../../components/Popup/popup';
+import Dictaphone from '../../components/VoiceRecognition';
+
 const tableIcons: Icons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
   Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -139,10 +141,10 @@ function TableList(props: any) {
   }
 
   const handleRowDelete = (oldData: any, resolve: any) => {
-    axios.delete("http://localhost:5000/employees/" + oldData.id)
+    axios.delete("http://localhost:5000/employees/" + oldData)
       .then(res => {
         const dataDelete = [...data];
-        const index = oldData.tableData.id;
+        const index = oldData;
         dataDelete.splice(index, 1);
         setData([...dataDelete]);
         resolve()
@@ -162,6 +164,7 @@ function TableList(props: any) {
 
   return (
     <>
+      <Dictaphone />
       <Grid container spacing={1}>
         <Grid item xs={12}>
           <div>
@@ -193,6 +196,7 @@ function TableList(props: any) {
                     render: (rowData: any) => <Popups
                       first_name={rowData.first_name}
                       id={rowData.id}
+                      team_id={rowData.team_id}
                       data={data}
                       selectValue={selectValue}
                       handleChange={handleChange}
@@ -220,7 +224,7 @@ function TableList(props: any) {
                     new Promise((resolve) => {
                       console.log(oldData);
                       console.log(resolve);
-                      handleRowDelete(oldData, resolve)
+                      handleRowDelete(oldData.id, resolve)
                     }),
                 }} />
 
