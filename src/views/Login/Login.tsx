@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState } from "react";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
@@ -11,29 +11,32 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 //redux stuff
 import { connect } from 'react-redux';
 import { loginUser } from '../../redux/actions/userActions';
-function Login(props: any) {
+import { observer } from "mobx-react";
+import { LoginStoreContext } from "../../Stores/loginStore";
+const Login = observer(()=>{
   const [values, setValues] = useState({
     email: "",
     password: ""
   });
+  const loginStore = useContext(LoginStoreContext)
   const [errors, setErrors] = useState({} as any);
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    if (props.UI.errors) {
-      setErrors(props.UI.errors);
-    }
-    setLoading(props.UI.loading);
-  }, [props.UI])
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    setLoading(true);
-    const userData = {
-      email: values.email,
-      password: values.password,
-    };
-    debugger;
-    props.loginUser(userData, props.history);
-  }
+  // useEffect(() => {
+  //   if (props.UI.errors) {
+  //     setErrors(props.UI.errors);
+  //   }
+  //   setLoading(props.UI.loading);
+  // }, [props.UI])
+  // const handleSubmit = (e: any) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+  //   const userData = {
+  //     email: values.email,
+  //     password: values.password,
+  //   };
+  //   debugger;
+  //   props.loginUser(userData, props.history);
+  // }
   const handleChange = (e: any) => {
     e.persist();
     setValues((values: any) => ({
@@ -88,7 +91,15 @@ function Login(props: any) {
                       {errors.message}
                     </Typography>
                   )}
-                  <Button type="submit" onClick={handleSubmit} variant="contained" color="primary" disabled={loading}>
+                  <Button
+                    type="submit"
+                    onClick={() => {
+                      localStorage.setItem("isLogin", "true")
+                      console.log(loginStore.login)
+                    }}
+                    variant="contained"
+                    color="primary"
+                    disabled={loading}>
                     Login
  {loading && (<CircularProgress size={30} color="secondary" />)}
                   </Button>
@@ -100,14 +111,6 @@ function Login(props: any) {
       </Box >
     </>
   )
-}
-//this map the states to our props in this functional component
-const mapStateToProps = (state: any) => ({
-  user: state.user,
-  UI: state.UI
-});
-//this map actions to our props in this functional component
-const mapActionsToProps = {
-  loginUser
-};
-export default connect(mapStateToProps, mapActionsToProps)(Login)
+})
+
+export default Login;

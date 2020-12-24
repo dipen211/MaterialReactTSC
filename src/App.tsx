@@ -1,32 +1,34 @@
-import React, { useEffect } from 'react';
+import React, { useContext } from 'react';
+import { observer } from "mobx-react"
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import Login from './views/Login/Login';
 import GuestRoute from './utils/GuestRoute';
-import Admin from './layouts/Admin';
-import RTL from './layouts/RTL';
 import { createBrowserHistory } from 'history';
+import Admin from './layouts/Admin';
 //redux stuff
-import { Provider } from 'react-redux';
-import store from './redux/stores';
-import { CheckAuthentication } from './utils/CheckAuthentication';
+import { LoginStoreContext } from "./Stores/loginStore";
+import Dashboard from './views/Dashboard/Dashboard';
 const hist = createBrowserHistory();
-const App: React.FC = () => {
-    useEffect(() => {
-        CheckAuthentication();
-    }, []);
+const App = observer(() => {
+    const loginStore = useContext(LoginStoreContext);
     return (
         <>
-            <Provider store={store}>
-                <Router>
-                    <Switch>
-                        <Route path="/admin" component={Admin} />
-                        <Route path="/rtl" component={RTL} />
-                        <GuestRoute exact path='/login' component={Login} />
-                        <Redirect from="/" to="/admin/dashboard" />
-                    </Switch>
-                </Router>
-            </Provider>
+            <Router>
+                <Switch>
+                    <Route path="/admin" component={Admin} />
+                    <GuestRoute exact path='/login' component={Login} />
+                    <Redirect from="/" to="/admin/dashboard" />
+                    {/* {loginStore.login ?
+                        <>
+                            {console.log(loginStore.login)}
+                            <Route path="/admin" component={Admin} />
+                            <Redirect from="/" to="/admin/dashboard" />
+                        </>
+                        : <GuestRoute exact path='/login' component={Login} />
+                    } */}
+                </Switch>
+            </Router>
         </>
     )
-}
+})
 export default App;

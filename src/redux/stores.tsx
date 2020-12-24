@@ -6,13 +6,13 @@ const initialState = {};
 const middleware = [thunk];
 //this is for redux devtool purpose
 declare global {
-interface Window {
- __REDUX_DEVTOOLS_EXTENSION__?: typeof compose;
-}
+    interface Window {
+        __REDUX_DEVTOOLS_EXTENSION__?: typeof compose;
+    }
 }
 const reducer = combineReducers({
- user: userReducer,//user key ma store gareko
- UI: uiReducer
+    user: userReducer,
+    UI: uiReducer
 });
 const store = createStore(reducer, initialState, compose(applyMiddleware(...middleware)));
 export default store;

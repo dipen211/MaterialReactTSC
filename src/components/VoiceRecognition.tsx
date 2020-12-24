@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-import { Link } from "react-router-dom";
 
 const Dictaphone = (Props: any) => {
   const [message, setMessage] = useState('');
@@ -22,9 +21,13 @@ const Dictaphone = (Props: any) => {
       callback: (id: any) => Props.deleteEmployee(id)
     },
     {
-      command: 'Edit ID *',
-      callback: (id: any) => <Link to={`edit/${id}`} />
+      command: 'in',
+      callback: Props.tatvasoftInAdd
     },
+    {
+      command: 'out',
+      callback: Props.tatvasoftOutAdd
+    }
   ]
   const {
     transcript,

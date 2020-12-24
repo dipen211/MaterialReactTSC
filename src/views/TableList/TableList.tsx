@@ -1,5 +1,5 @@
 import Grid from '@material-ui/core/Grid'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import Card from '../../components/Card/Card';
 import CardHeader from '../../components/Card/CardHeader';
@@ -28,7 +28,9 @@ import { forwardRef } from 'react';
 import { createStyles } from '@material-ui/core';
 import { Popups } from '../../components/Popup/popup';
 import Dictaphone from '../../components/VoiceRecognition';
-
+import Time from '../Time/Time';
+import { observer } from "mobx-react";
+import { TableStoreContext } from "../../Stores/tableStore";
 const tableIcons: Icons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
   Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -48,31 +50,31 @@ const tableIcons: Icons = {
   ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
-function TableList(props: any) {
-  // const { classes } = props;
+const TableList = observer((props: any) =>{
+  const TableStore = useContext(TableStoreContext)
   const [data, setData] = useState([] as any);
   const [iserror, setIserror] = useState(false)
   const [errorMessages, setErrorMessages] = useState([] as any)
   const [selectValue, setselectValue] = useState([] as any);
-  useEffect(() => {
-    axios.get('http://localhost:5000/employees')
-      .then(res => {
-        const employees = Object.keys(res.data)
-        // console.log(employees);
-        const testData = employees.map(key => {
-          const emp = res.data[key]
-          return {
-            id: emp.id,
-            first_name: emp.first_name,
-            last_name: emp.last_name,
-            email: emp.email,
-            password: emp.password,
-            team_id: emp.team_id
-          }
-        });
-        setData(testData);
-      })
-  }, [])
+  // useEffect(() => {
+  //   axios.get('http://localhost:5000/employees')
+  //     .then(res => {
+  //       const employees = Object.keys(res.data)
+  //       // console.log(employees);
+  //       const testData = employees.map(key => {
+  //         const emp = res.data[key]
+  //         return {
+  //           id: emp.id,
+  //           first_name: emp.first_name,
+  //           last_name: emp.last_name,
+  //           email: emp.email,
+  //           password: emp.password,
+  //           team_id: emp.team_id
+  //         }
+  //       });
+  //       setData(testData);
+  //     })
+  // }, [])
 
   const handleRowUpdate = (newData: any, oldData: any, resolve: { (value?: any): void; (): void; }) => {
     //validation
@@ -160,11 +162,8 @@ function TableList(props: any) {
   };
   const options = data.map((data: any) => (data.id));
 
-  const [open, setOpen] = React.useState(false);
-
   return (
     <>
-      <Dictaphone />
       <Grid container spacing={1}>
         <Grid item xs={12}>
           <div>
@@ -182,7 +181,7 @@ function TableList(props: any) {
             </CardHeader>
             <CardBody>
               <MaterialTable
-                data={data}
+                data={TableStore.login}
                 columns={[
                   { field: 'id', title: 'ID' },
                   { field: 'first_name', title: 'First name' },
@@ -232,9 +231,10 @@ function TableList(props: any) {
           </Card>
         </Grid>
       </Grid>
+      <Time />
     </>
   );
-}
+})
 
 export default TableList;
 

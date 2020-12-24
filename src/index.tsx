@@ -15,19 +15,10 @@ import store from './redux/stores';
 import { CheckAuthentication } from './utils/CheckAuthentication';
 
 import 'assets/css/material-dashboard-react.css?v=1.6.0';
-
+import App from './App';
 const hist = createBrowserHistory();
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Router history={hist}>
-      <Switch>
-        <Route path="/admin" component={Admin} />
-        <Route path="/rtl" component={RTL} />
-        <GuestRoute exact path='/login' component={Login} />
-        <Redirect from="/" to="/admin/dashboard" />
-      </Switch>
-    </Router>
-  </Provider>,
+  <App/>,
   document.getElementById('root')
 );

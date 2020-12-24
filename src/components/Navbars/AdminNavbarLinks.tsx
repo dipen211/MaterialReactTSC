@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import classNames from 'classnames';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -19,7 +19,7 @@ import CustomInput from '../CustomInput/CustomInput';
 import Button from '../CustomButtons/Button';
 
 import headerLinksStyle from '../../assets/jss/material-dashboard-react/components/headerLinksStyle';
-
+import { LoginStoreContext } from "../../Stores/loginStore";
 import { Link } from "react-router-dom";
 
 interface Props {
@@ -27,7 +27,6 @@ interface Props {
 }
 
 class HeaderLinks extends React.Component<Props, {}> {
-
   anchorEl: any;
 
   state = {
@@ -229,14 +228,13 @@ class HeaderLinks extends React.Component<Props, {}> {
                         onClick={this.UserClose}
                         className={classes.dropdownItem}
                       >
-                        <Link
-                          to={`/Login`}
-                          className={classes.profileMenuLink}
-                          color="primary"
-                        >
-                          <button>Sign-Out</button>
-                        </Link>
-                        
+                        <button
+                          onClick={() => {
+                            localStorage.setItem("isLogin", "false");
+                          }}>
+                          Sign-Out
+                          </button>
+
                       </MenuItem>
                     </MenuList>
                   </ClickAwayListener>
