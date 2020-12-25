@@ -7,7 +7,7 @@
         "3",
         "4"
       ],
-      "first_name": "Divya",
+      "first_name": "Divyas",
       "last_name": "Patel",
       "email": "pateldipen161@gmail.com",
       "password": "1234567890"
@@ -52,14 +52,6 @@
       "last_name": "Patel",
       "email": "pateldipen@gmail.com",
       "password": "xyz"
-    },
-    {
-      "id": "8",
-      "first_name": "jhgfd",
-      "last_name": "hgfdsjhgfds",
-      "email": "jhgfdy",
-      "password": "ijuhygtfd",
-      "team_id": "3"
     }
   ]
 }
