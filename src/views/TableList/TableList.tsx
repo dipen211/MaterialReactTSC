@@ -50,15 +50,30 @@ const tableIcons: Icons = {
   ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
-const TableList = observer((props: any) =>{
-  const TableStore = useContext(TableStoreContext)
-  const datas = TableStore.getData();
-  console.log(datas);
-  const [data, setData] = useState([] as any);
+const TableList = observer((props: any) => {
+  // const TableStore = useContext(TableStoreContext)
+  // const datas = TableStore.getData();
+  // console.log(datas);
+  interface EmployeeUI {
+    id: string;
+    team_id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    password: string;
+  }
+  const [data, setData] = useState<EmployeeUI[]>([]);
   const [iserror, setIserror] = useState(false)
   const [errorMessages, setErrorMessages] = useState([] as any)
   const [selectValue, setselectValue] = useState([] as any);
-  
+  const fetchEmployees = async () => {
+    const employees = await fetch('http://localhost:3001/employee')
+      .then(res => res.json())
+      .then(res => setData(res))
+  }
+  useEffect(() => {
+    fetchEmployees()
+  }, [])
   const handleRowUpdate = (newData: any, oldData: any, resolve: { (value?: any): void; (): void; }) => {
     //validation
     let errorList: string | any[] | ((prevState: never[]) => never[]) = []
@@ -66,7 +81,7 @@ const TableList = observer((props: any) =>{
       console.log(oldData.id);
       axios.patch("http://localhost:5000/employees/" + oldData.id, newData)
         .then(res => {
-          const dataUpdate = [...datas];
+          const dataUpdate = [...data];
           const index = oldData.tableData.id;
           dataUpdate[index] = newData;
           setData([...dataUpdate]);
@@ -104,7 +119,7 @@ const TableList = observer((props: any) =>{
     if (errorList.length < 1) { //no error
       axios.post("http://localhost:5000/employees/", newData)
         .then(res => {
-          let dataToAdd = [...datas];
+          let dataToAdd = [...data];
           dataToAdd.push(newData);
           setData(dataToAdd);
           resolve()
@@ -128,7 +143,7 @@ const TableList = observer((props: any) =>{
   const handleRowDelete = (oldData: any, resolve: any) => {
     axios.delete("http://localhost:5000/employees/" + oldData)
       .then(res => {
-        const dataDelete = [...datas];
+        const dataDelete = [...data];
         const index = oldData;
         dataDelete.splice(index, 1);
         setData([...dataDelete]);
@@ -143,7 +158,7 @@ const TableList = observer((props: any) =>{
   const handleChange = (selectValue: any) => {
     setselectValue({ selectValue });
   };
-  const options = datas.map((data: any) => (data.id));
+  const options = data.map((data: any) => (data.id));
 
   return (
     <>
@@ -164,7 +179,7 @@ const TableList = observer((props: any) =>{
             </CardHeader>
             <CardBody>
               <MaterialTable
-                data={datas}
+                data={data}
                 columns={[
                   { field: 'id', title: 'ID' },
                   { field: 'first_name', title: 'First name' },
@@ -179,7 +194,7 @@ const TableList = observer((props: any) =>{
                       first_name={rowData.first_name}
                       id={rowData.id}
                       team_id={rowData.team_id}
-                      data={datas}
+                      data={data}
                       selectValue={selectValue}
                       handleChange={handleChange}
                       options={options}

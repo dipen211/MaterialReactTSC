@@ -15,17 +15,17 @@ const App = observer(() => {
         <>
             <Router>
                 <Switch>
-                    {/* <Route path="/admin" component={Admin} />
+                    <Route path="/admin" component={Admin} />
                     <GuestRoute exact path='/login' component={Login} />
-                    <Redirect from="/" to="/admin/dashboard" /> */}
-                    {loginStore.login ?
+                    <Redirect from="/" to="/admin/dashboard" />
+                    {/* {loginStore.login ?
                         <>
                             {console.log(loginStore.login)}
                             <Route path="/admin" component={Admin} />
                             <Redirect from="/" to="/admin/dashboard" />
                         </>
                         : <GuestRoute exact path='/login' component={Login} />
-                    }
+                    } */}
                 </Switch>
             </Router>
         </>
