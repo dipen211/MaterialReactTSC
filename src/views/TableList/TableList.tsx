@@ -29,8 +29,8 @@ import { createStyles } from '@material-ui/core';
 import { Popups } from '../../components/Popup/popup';
 import Dictaphone from '../../components/VoiceRecognition';
 import Time from '../Time/Time';
-import { observer } from "mobx-react";
-import { TableStoreContext } from "../../Stores/tableStore";
+// import { observer } from "mobx-react";
+// import { TableStoreContext } from "../../Stores/tableStore";
 const tableIcons: Icons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
   Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -50,19 +50,11 @@ const tableIcons: Icons = {
   ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
-const TableList = observer((props: any) => {
+const TableList = (props: any) => {
   // const TableStore = useContext(TableStoreContext)
   // const datas = TableStore.getData();
   // console.log(datas);
-  interface EmployeeUI {
-    id: string;
-    team_id: string;
-    first_name: string;
-    last_name: string;
-    email: string;
-    password: string;
-  }
-  const [data, setData] = useState<EmployeeUI[]>([]);
+  const [data, setData] = useState([] as any);
   const [iserror, setIserror] = useState(false)
   const [errorMessages, setErrorMessages] = useState([] as any)
   const [selectValue, setselectValue] = useState([] as any);
@@ -79,7 +71,7 @@ const TableList = observer((props: any) => {
     let errorList: string | any[] | ((prevState: never[]) => never[]) = []
     if (errorList.length < 1) {
       console.log(oldData.id);
-      axios.patch("http://localhost:5000/employees/" + oldData.id, newData)
+      axios.put("http://localhost:3001/employee/" + oldData.id, newData)
         .then(res => {
           const dataUpdate = [...data];
           const index = oldData.tableData.id;
@@ -117,18 +109,9 @@ const TableList = observer((props: any) => {
       errorList.push("Please enter a valid password")
     }
     if (errorList.length < 1) { //no error
-      axios.post("http://localhost:5000/employees/", newData)
-        .then(res => {
-          let dataToAdd = [...data];
-          dataToAdd.push(newData);
-          setData(dataToAdd);
-          resolve()
-          setErrorMessages([])
-          setIserror(false)
-          console.log("ADD");
-        })
+      axios.post("http://localhost:3001/employee/", newData)
+        .then(res => setData(res))
         .catch(error => {
-          console.log("ADD123");
           setErrorMessages(["Cannot add data. Server error!"])
           setIserror(true)
           resolve()
@@ -141,14 +124,8 @@ const TableList = observer((props: any) => {
   }
 
   const handleRowDelete = (oldData: any, resolve: any) => {
-    axios.delete("http://localhost:5000/employees/" + oldData)
-      .then(res => {
-        const dataDelete = [...data];
-        const index = oldData;
-        dataDelete.splice(index, 1);
-        setData([...dataDelete]);
-        resolve()
-      })
+    axios.delete("http://localhost:3001/employee/" + oldData)
+      .then(res => setData(res))
       .catch(error => {
         setErrorMessages(["Delete failed! Server error"])
         setIserror(true)
@@ -232,7 +209,7 @@ const TableList = observer((props: any) => {
       <Time />
     </>
   );
-})
+}
 
 export default TableList;
 
