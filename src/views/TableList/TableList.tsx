@@ -59,7 +59,7 @@ const TableList = (props: any) => {
   const [errorMessages, setErrorMessages] = useState([] as any)
   const [selectValue, setselectValue] = useState([] as any);
   const fetchEmployees = async () => {
-    const employees = await fetch('http://localhost:3001/employee')
+    const employees = await fetch('http://localhost:5000/employee')
       .then(res => res.json())
       .then(res => setData(res))
   }
@@ -71,7 +71,7 @@ const TableList = (props: any) => {
     let errorList: string | any[] | ((prevState: never[]) => never[]) = []
     if (errorList.length < 1) {
       console.log(oldData.id);
-      axios.put("http://localhost:3001/employee/" + oldData.id, newData)
+      axios.put("http://localhost:5000/employee/" + oldData.id, newData)
         .then(res => {
           const dataUpdate = [...data];
           const index = oldData.tableData.id;
@@ -109,7 +109,7 @@ const TableList = (props: any) => {
       errorList.push("Please enter a valid password")
     }
     if (errorList.length < 1) { //no error
-      axios.post("http://localhost:3001/employee/", newData)
+      axios.post("http://localhost:5000/employee/", newData)
         .then(res => setData(res))
         .catch(error => {
           setErrorMessages(["Cannot add data. Server error!"])
@@ -124,7 +124,7 @@ const TableList = (props: any) => {
   }
 
   const handleRowDelete = (oldData: any, resolve: any) => {
-    axios.delete("http://localhost:3001/employee/" + oldData)
+    axios.delete("http://localhost:5000/employee/" + oldData)
       .then(res => setData(res))
       .catch(error => {
         setErrorMessages(["Delete failed! Server error"])
