@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 import { loginUser } from '../../redux/actions/userActions';
 import { observer } from "mobx-react";
 import { LoginStoreContext } from "../../Stores/loginStore";
-const Login = observer(()=>{
+const Login = (props: any)=>{
   const [values, setValues] = useState({
     email: "",
     password: ""
@@ -27,16 +27,15 @@ const Login = observer(()=>{
   //   }
   //   setLoading(props.UI.loading);
   // }, [props.UI])
-  // const handleSubmit = (e: any) => {
-  //   e.preventDefault();
-  //   setLoading(true);
-  //   const userData = {
-  //     email: values.email,
-  //     password: values.password,
-  //   };
-  //   debugger;
-  //   props.loginUser(userData, props.history);
-  // }
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    setLoading(true);
+    const userData = {
+      email: values.email,
+      password: values.password,
+    };
+    loginUser(userData, props.history);
+  }
   const handleChange = (e: any) => {
     e.persist();
     setValues((values: any) => ({
@@ -93,10 +92,7 @@ const Login = observer(()=>{
                   )}
                   <Button
                     type="submit"
-                    onClick={() => {
-                      localStorage.setItem("isLogin", "true")
-                      console.log(loginStore.login)
-                    }}
+                    onClick={handleSubmit}
                     variant="contained"
                     color="primary"
                     disabled={loading}>
@@ -111,6 +107,6 @@ const Login = observer(()=>{
       </Box >
     </>
   )
-})
+}
 
 export default Login;

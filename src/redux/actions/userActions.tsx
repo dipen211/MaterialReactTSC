@@ -2,18 +2,16 @@ import { SET_USER, SET_ERRORS, LOADING_UI, CLEAR_ERRORS, SET_UNAUTHENTICATED, LO
 import axios from 'axios';
 export const loginUser = (userData: any, history: any) => (dispatch: any) => {
     dispatch({ type: LOADING_UI })
-    axios.get('http://localhost:5000/employees', userData)
+    axios.post("http://localhost:5000/login/", userData)
         .then((res) => {
-            const employees = res.data;
-            const token = `Bearer ${res.data.token}`;
-            localStorage.setItem('token', `Bearer ${res.data.token}`);
-            axios.defaults.headers.common['Authorization'] = token;
-            dispatch({ type: CLEAR_ERRORS });
-            console.log(userData.email)
-            console.log(userData.password)
-            employees.map((key: any) => (key.email === userData.email && key.password === userData.password ?
-                history.push("/app/dashboard") : null)
-            );
+            debugger;
+            if (res.statusText === "Created") {
+                history.push("/app/dashboard")
+            }
+            else
+            {
+                history.push("/login")
+            }
         })
         .catch((err) => {
             console.log(err);
